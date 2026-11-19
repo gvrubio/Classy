@@ -62,6 +62,8 @@ object ThemeManager {
         var buttonRadius: Int
     ) {
         var customFontBold: Typeface? = null
+        /** config.json `"flat": true`: plain colors for the selected row and the status bar, no gradient. */
+        var flat: Boolean = false
         var menuElements: MutableList<MenuElement> = ArrayList()
     }
 
@@ -171,7 +173,10 @@ object ThemeManager {
         return availableThemes[currentThemeIndex].statusBarBg
     }
 
+    fun isFlatTheme(): Boolean = availableThemes.isNotEmpty() && availableThemes[currentThemeIndex].flat
+
     fun createStatusBarBackground(): GradientDrawable {
+        if (isFlatTheme()) return GradientDrawable().apply { setColor(getStatusBarBackgroundColor()) }
         if (isClassicLightTheme()) {
             return GradientDrawable(
                 GradientDrawable.Orientation.TOP_BOTTOM,
@@ -300,6 +305,7 @@ object ThemeManager {
                                 parsedRadius
                             )
                             theme.customFontBold = parsedFontBold
+                            theme.flat = json.optBoolean("flat", false)
 
                             if (json.has("main_menu")) {
                                 val menuArray = json.getJSONArray("main_menu")
@@ -339,6 +345,18 @@ object ThemeManager {
                                         )
                                     )
                                 }
+                            }
+                            // No "main_menu" in config.json: the standard menu, with the arrows in the theme colors
+                            if (theme.menuElements.isEmpty()) {
+                                theme.menuElements.addAll(DEFAULT_FALLBACK_THEME.menuElements.map { e ->
+                                    MenuElement(
+                                        e.id, e.type, e.parentId, e.visibleOnFocus, e.x, e.y, e.width, e.height,
+                                        e.textNormal, e.textFocused, e.textRight, "", "", e.iconNormal, e.iconFocused,
+                                        e.previewImage, e.action, e.gravity, e.radius, e.focusIndex, e.textSize,
+                                        e.textSecondarySize, e.textPosition, e.textAlign, e.bgColor, e.padding,
+                                        e.focusOffsetX, e.focusOffsetY, e.focusScale
+                                    )
+                                })
                             }
                             if (availableThemes.none { it.name == theme.name }) {
                                 availableThemes.add(theme)
@@ -456,7 +474,10 @@ object ThemeManager {
         return "Classic Light" == name || "iPod Classic" == name
     }
 
-    fun getListTextSize(): Float = if (isClassicTheme()) 21f else 23f
+    /** The Classic text sizes (21 px lists and settings rows): Classic themes, and themes with `"flat": true`, so one size everywhere. */
+    fun usesClassicSizes(): Boolean = isClassicTheme() || isFlatTheme()
+
+    fun getListTextSize(): Float = if (usesClassicSizes()) 21f else 23f
 
     fun getTextColorPrimary(): Int = getCurrentTheme().textPrimary
 

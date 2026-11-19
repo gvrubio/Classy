@@ -318,7 +318,7 @@ class ListScreen(
 
     private fun infoRow(text: String): TextView = TextView(context).apply {
         val d = resources.displayMetrics.density
-        val classic = ThemeManager.isClassicTheme()
+        val classic = ThemeManager.usesClassicSizes()
         val padX = ((if (classic) 8 else 12) * d).toInt()
         this.text = text
         setTextColor(ThemeManager.getTextColorSecondary())

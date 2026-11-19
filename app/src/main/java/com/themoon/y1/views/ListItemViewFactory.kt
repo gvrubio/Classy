@@ -35,6 +35,7 @@ object ListItemViewFactory {
                 intArrayOf(0xFF62B7F5.toInt(), 0xFF2588DC.toInt(), 0xFF0865C4.toInt())
             )
         }
+        if (ThemeManager.isFlatTheme()) return createButtonBackground(context, ThemeManager.getListButtonFocusedBg())
         val base = ThemeManager.getListButtonFocusedBg()
         val hsv = FloatArray(3)
         Color.colorToHSV(base, hsv)
@@ -219,7 +220,7 @@ object ListItemViewFactory {
         val btn = Button(context).apply {
             this.text = text
             setTextColor(ThemeManager.getTextColorPrimary())
-            setTextSize(TypedValue.COMPLEX_UNIT_PX, (if (ThemeManager.isClassicTheme()) 21f else 16f) * d)
+            setTextSize(TypedValue.COMPLEX_UNIT_PX, (if (ThemeManager.usesClassicSizes()) 21f else 16f) * d)
             typeface = if (ThemeManager.isClassicTheme()) ThemeManager.getCustomFontBold() else ThemeManager.getCustomFont()
             includeFontPadding = false
             gravity = Gravity.LEFT or Gravity.CENTER_VERTICAL
@@ -252,7 +253,7 @@ object ListItemViewFactory {
 
         val btn = TextView(context).apply {
             this.text = text
-            setTextSize(TypedValue.COMPLEX_UNIT_PX, (if (ThemeManager.isClassicTheme()) 16f else 15f) * d)
+            setTextSize(TypedValue.COMPLEX_UNIT_PX, (if (ThemeManager.usesClassicSizes()) 16f else 15f) * d)
             typeface = ThemeManager.getCustomFontBold()
             gravity = Gravity.CENTER
             isFocusable = true
@@ -302,7 +303,7 @@ object ListItemViewFactory {
         val tvTitle = TextView(context).apply {
             text = title
             setTextColor(ThemeManager.getTextColorPrimary())
-            setTextSize(TypedValue.COMPLEX_UNIT_PX, (if (ThemeManager.isClassicTheme()) 21f else 16f) * d)
+            setTextSize(TypedValue.COMPLEX_UNIT_PX, (if (ThemeManager.usesClassicSizes()) 21f else 16f) * d)
             typeface = if (ThemeManager.isClassicTheme()) ThemeManager.getCustomFontBold() else ThemeManager.getCustomFont()
             includeFontPadding = false
             layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1.0f)
@@ -315,7 +316,7 @@ object ListItemViewFactory {
             stateKey = title
             text = displayVal
             setTextColor(ThemeManager.getTextColorSecondary())
-            setTextSize(TypedValue.COMPLEX_UNIT_PX, (if (ThemeManager.isClassicTheme()) 21f else 14f) * d)
+            setTextSize(TypedValue.COMPLEX_UNIT_PX, (if (ThemeManager.usesClassicSizes()) 21f else 14f) * d)
             typeface = ThemeManager.getCustomFont()
             includeFontPadding = false
         }
